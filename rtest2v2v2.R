@@ -30,7 +30,7 @@ g <- list(
 	countrywidth = 0.5,
 	subunitwidth = 0.5
 )
-
+#, color = I("#1f77b4")
 # main plot
 p <- plot_geo(LLcmAuNum, 
               width = 1200,
@@ -38,18 +38,19 @@ p <- plot_geo(LLcmAuNum,
               x=.4,
               size = c(1,500)) %>%
 	add_markers(
-		y = ~latitude, x = ~longitude, name= ~author, size = ~count+50, color = I("#1f77b4"),
+		y = ~latitude, x = ~longitude, name= ~author, size = ~count+50, visible = "legendonly", color= ~authorID, colorscale='Viridis',
+		reversescale =T, showscale=F,
 		text = ~paste(DisplayName, 
-		              paste("References: ", count), 
+		              paste(author,", references: ", count, sep = ""), 
 		              paste("References by text: ", textCount), 
 		              sep = "<br />"),
 		symbol = I("circle"), span = I(1), hoverinfo = "text")
 
 p <- add_annotations(p, 
-                     text = "Authors: double-click <br />to select, single <br />click to add to <br /> or remove from <br />selection",
+                     text = "Authors: click<br />to select/unselect",
                      xref = "paper",
                      yref = "paper",
-                     x = 0.88, 
+                     x = 0.9, 
                      xanchor = "left",
                      y = .99,
                      yanchor = "top",
@@ -57,10 +58,10 @@ p <- add_annotations(p,
                      showarrow = FALSE)
 
 # other info
-p <- colorbar(p, title = "Count") %>%
-	layout(
-		title = paste('Individual Authors: Hover for name and count'), geo = g, showlegend = TRUE 
-	)
+p <- 
+	layout(p,
+		title = paste('Individual Authors: Hover for name and count'), geo = g, showlegend = TRUE
+	) %>% hide_colorbar()
 p
 
 # Create a shareable link to your chart
